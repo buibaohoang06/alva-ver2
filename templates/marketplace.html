@@ -38,10 +38,9 @@
         </div>
         <div id="highlights-wrapper" class="container-fluid">
             <div id="highlights">
-                <img src="https://images.unsplash.com/photo-1656613391854-ca1fae692e20?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80" id="highlights-img">
-                <img src="https://images.unsplash.com/photo-1656613391854-ca1fae692e20?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80" id="highlights-img">
-                <img src="https://images.unsplash.com/photo-1656613391854-ca1fae692e20?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80" id="highlights-img">
-                <img src="https://images.unsplash.com/photo-1656613391854-ca1fae692e20?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80" id="highlights-img">
+                {% for asset in assets.items %}
+                    <img src="{{ asset.asset_route }}" id="highlights-img">
+                {% endfor %}
             </div>
             <p class="text-secondary-emphasis text-center" style="margin-top: 10px;">Click on one of the images to get more info!</p>
         </div>

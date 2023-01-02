@@ -117,10 +117,8 @@ def indexpage():
 def marketplace():
     page = request.args.get('p', 1)
     try:
-        assets = Assets.query.all().order_by(desc(Assets.id)).paginate(page=page, per_page=24)
+        assets = Assets.query.order_by(desc(Assets.id)).paginate(page=page, per_page=12)
     except OperationalError:
-        assets = None
-    except AttributeError:
         assets = None
     return render_template('marketplace.html', assets=assets)
 
