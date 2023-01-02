@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block body %}
+<div id="indexpage">
+    <div id="banner-introduce" class="container text-center animate__animated animate__fadeInUp">
+        <h1>Hello there!</h1>
+        <p>Veart is an online digital art gallery where you can buy and sell art with ease</p>
+        <button type="button" class="btn" id="start">Start here</button>
+        <p style="margin-top: 30px;">© 2022-2023 <a href="https://lunarweb.xyz" style="color: white; text-decoration: none;">Lunarweb Agency</a> All rights reserved.</p>
+    </div>
+</div>
+<script>
+    document.getElementById('start').addEventListener('click', (e) => {
+        window.location.replace('/marketplace');
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="/static/auth.css">
+{% endblock %}
+{% block body %}
+<div id="auth" class="bg-body-tertiary container-fluid d-flex justify-content-center align-items-center">
+    {% if page == "login" %}
+        <form action="/{{ page }}" class="text-center" method="POST">
+            <i class="bi bi-flower3 text-center" style="width: 100%; font-size: 40px; margin: auto;"></i>
+            <h4 style="padding: 20px;">Veart <span style="font-weight: 100">| Login</span></h4>
+            {{ form.csrf_token() }}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'message' %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position: fixed; z-index: 9999;">
+                        {% else %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {% endif %}
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="form-floating mb-2">
+                {{ form.email(id_="floatingInput", class_="form-control") }}
+                <label for="floatingInput">Email</label>
+            </div>
+            <div class="form-floating mb-2">
+                {{ form.password(id_="floatingInput", class_="form-control") }}
+                <label for="floatingInput">Password</label>
+            </div>
+            <button type="submit" class="btn btn-outline-success w-100">Login</button>
+            <p class="text-primary" style="margin-top: 10px;">Don't have an account? <a href="/register">Register</a> now!</p>
+        </form>
+    {% elif page == "register" %}
+        <form action="/{{ page }}" class="text-center" method="POST">
+            <i class="bi bi-flower3 text-center" style="width: 100%; font-size: 40px; margin: auto;"></i>
+            <h4 style="padding: 20px;">Veart <span style="font-weight: 100">| Register</span></h4>
+            {{ form.csrf_token() }}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'message' %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position: fixed; z-index: 9999;">
+                        {% else %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {% endif %}
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="form-floating mb-2">
+                {{ form.username(id_="floatingInput", class_="form-control") }}
+                <label for="floatingInput">Username</label>
+            </div>
+            <div class="form-floating mb-2">
+                {{ form.email(id_="floatingInput", class_="form-control") }}
+                <label for="floatingInput">Email</label>
+            </div>
+            <div class="form-floating mb-2">
+                {{ form.phonenumber(id_="floatingInput", class_="form-control") }}
+                <label for="floatingInput">Phone Number</label>
+            </div>
+            <div class="form-floating mb-2">
+                {{ form.password(id_="floatingInput", class_="form-control") }}
+                <label for="floatingInput">Password</label>
+            </div>
+            <button type="submit" class="btn btn-outline-success w-100">Register</button>
+            <p class="text-primary" style="margin-top: 10px;">Already have an account? <a href="/login">Login</a> now!</p>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

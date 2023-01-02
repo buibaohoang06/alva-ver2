@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="/static/dashboard.css">
+{% endblock %}
+{% block body %}
+<div id="dashboard" class="bg-body-tertiary">
+    <div id="navbar">
+        <div id="logo">
+            <h4><i class="bi bi-flower3"></i>Veart.</h4>
+        </div>
+        <div id="nav" class="navbar navbar-expand-lg mx-auto">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="/marketplace" class="nav-link">Marketplace</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/support" class="nav-link">Support</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/wallet" class="nav-link">Wallet</a>
+                </li>
+            </ul>
+        </div>
+        <div id="actions">
+            <h4><i class="bi bi-person-circle"></i></h4>
+        </div>
+    </div>
+    <div id="dashboard-content" class="container" style="margin-top: 50px;">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Welcome to your dashboard! {{ current_user.username }} (This message will disappear in the alpha version.)</h4>
+            <p>This is where you can create posts for your art products and projects. Click the Create button to start posting. Click on any product to edit it!</p>
+            <hr>
+            <p>Need help? Contact us via email help@veart.co</p>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'message' %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position: fixed; z-index: 9999;">
+                    {% else %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {% endif %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div id="create-content" class="container">
+            <div id="upload">
+                <form method="POST" action="/dashboard" enctype="multipart/form-data">
+                    <h4>Upload your image here!</h4>
+                    {{ create.csrf_token() }}
+                    <div class="form-floating mb-3">
+                        {{ create.image_title(class_="form-control", id_="floatingInput") }}
+                        <label for="floatingInput">Title</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        {{ create.image_description(class_="form-control", id_="floatingInput") }}
+                        <label for="floatingPassword">Description</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        {{ create.price(class_="form-control", id_="floatingInput") }}
+                        <label for="floatingPassword">Price</label>
+                    </div>
+                    <div class="mb-3" style="margin-top: 10px;">
+                        <label for="formFile" class="form-label">Insert file here</label>
+                        {{ create.file_data(class_="form-control") }}
+                    </div>
+                    <button type="submit" class="btn btn-outline-success w-100">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+html{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+html::-webkit-scrollbar{
+    display: none;
+}
+body{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-image: url('/static/ammie-ngo-vcu-OZBxxRk-unsplash.jpg');
+    background-size: cover;
+    background-repeat: none;
+    object-fit: contain;
+}
+#indexpage{
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#banner-introduce{
+    color: white;
+    font-family: 'Poppins', sans-serif;
+}
+#banner-introduce p{
+    font-weight: 300;
+}
+#banner-introduce button{
+    border: none;
+    background-color: white;
+    color: black;
+}
+#banner-introduce button:hover{
+    color: white;
+    transition: background-color ease-in-out 0.2s;
+    background-color: rgba(0, 0, 0, 0.3);
+}

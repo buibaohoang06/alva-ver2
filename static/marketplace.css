@@ -1,0 +1,121 @@
+#marketplace{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+#navbar{
+    width: 100%;
+    height: fit-content;
+    background-color: #30343c;
+    padding: 20px;
+    display: inline-grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width: 930px) {
+    #navbar{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+.skeleton-text{
+    width: 100%;
+    height: 0.7rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+}
+#logo{
+    height: fit-content;
+    width: 100%;
+    display: block;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    text-align: center;
+    margin: auto;
+}
+#logo h4{
+    padding: 0;
+    margin: 0;
+}
+#nav{
+    display: block;
+    width: 100%;
+    height: fit-content;
+}
+#nav ul{
+    width: 100%;
+    text-align: center;
+    margin: auto;
+}
+#nav li{
+    margin-left: 20px;
+    margin-right: 20px;
+    justify-content: space-between;
+}
+#nav a{
+    text-align: center;
+    font-size: 1rem;
+}
+@media (max-width: 930px) {
+    #nav{
+        display: none;
+    }
+}
+#actions{
+    width: 100%;
+    height: fit-content;
+    text-align: center;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+#actions h4{
+    margin: 0;
+    padding: 0;
+}
+#content{
+    width: 100%;
+    height: fit-content;
+    padding: 20px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+}
+#mantra{
+    margin-top: 50px;
+}
+#highlights-wrapper{
+    width: 100%;
+    overflow-x: scroll;
+}
+#highlights-wrapper::-webkit-scrollbar{
+    display: none;
+}
+#highlights{
+    margin-top: 60px;
+    width: 100%;
+    display: inline-grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+    overflow-x: scroll;
+    cursor:pointer;
+}
+#highlights::-webkit-scrollbar{
+    display: none;
+}
+#highlights::-webkit-scrollbar-thumb{
+    background-color: darkgray;
+    border-radius: 500px;
+    margin: 100px;
+}
+#highlights-img{
+   display: block;
+   height: 300px;
+   width: auto; 
+   margin: auto;
+   border-radius: 15px 15px 15px 15px;
+}
+#highlights-img:hover{
+    transition: box-shadow ease-in-out 0.2s;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}  
