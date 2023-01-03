@@ -12,7 +12,7 @@ from wtforms import StringField, PasswordField, IntegerField, EmailField, FileFi
 from wtforms.validators import InputRequired
 from datetime import datetime
 import os
-
+import locale
 #Initialize Blueprint
 indexbp = Blueprint("index", __name__, url_prefix="/", template_folder="templates", static_folder="static")
 
@@ -213,21 +213,23 @@ def dashboard():
                 asset.asset_description = create.image_description.data
                 asset.price = int(create.price.data)
                 asset.owner = current_user.user_id
+                asset.creation_date = datetime.now()
                 db.session.add(asset)
                 db.session.commit()
                 flash('Image uploaded!', 'success')
-                return redirect('/dashboard')
+                return redirect(f'/asset/{uuid}')
         except Exception as e:
             print(str(e))
             flash('Error occurred', 'danger')
             return redirect('/dashboard')
     return render_template('dashboard.html', current_user=current_user, create=create)
 
-@indexbp.route('/asset/<asset>', methods=['GET', 'POST'])
+@indexbp.route('/asset/<asset_id>', methods=['GET', 'POST'])
 @login_required
 def view_product(asset_id: str):
     product = Assets.query.filter_by(asset_id=asset_id).first()
-    return render_template('asset.html', asset=product)
+    author = User.query.filter_by(user_id=product.owner).first()
+    return render_template('asset.html', asset=product, author=author, datetime=datetime.now(), current_user=current_user)
 
 @indexbp.route('/purchase', methods=['GET', 'POST'])
 @login_required

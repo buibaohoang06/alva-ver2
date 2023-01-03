@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="/static/asset.css">
+{% endblock %}
+{% block body %}
+<div id="asset" class="bg-body-tertiary">
+    <div id="navbar">
+        <div id="logo">
+            <h4><i class="bi bi-flower3"></i>Veart.</h4>
+        </div>
+        <div id="nav" class="navbar navbar-expand-lg mx-auto">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="/marketplace" class="nav-link">Marketplace</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/support" class="nav-link">Support</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/wallet" class="nav-link">Wallet</a>
+                </li>
+            </ul>
+        </div>
+        <div id="actions">
+            <h4><i class="bi bi-person-circle"></i></h4>
+        </div>
+    </div>
+    <div id="asset-content" class="container-fluid">
+        <div id="title" class="container text-center animate__animated animate__fadeInUp">
+            <h1>Viewing asset</h1><br>
+            <p>Asset ID: {{ asset.asset_id }}</p>
+        </div>
+        <div id="asset-details" class="animate__animated animate__fadeInUp animate__delay-0.5s">
+            <div id="show-asset">
+                <p><i class="bi bi-check-circle-fill"></i> Viewing Image #{{ asset.id }}</p>
+                <img src="/{{ asset.asset_route }}" id="asset-show-content">
+            </div>
+            <div id="show-info">
+                <p class="text-primary">Made by <a href="/user/{{ author.user_id }}">{{ author.username }}</a></p>
+                <h1>{{ asset.asset_name }}</h1>
+                <p class="text-warning">Asset Hash: {{ asset.asset_hash }}</p>
+                <div id="purchase-panel">
+                    <p class="text-light">Currently buying as - {{ current_user.username }}</p>
+                    <p class="text-body">Current Price</p>
+                    <h1 class="text-light" id="price">đ</h1>
+                    <button type="button" class="btn btn-primary" id="purchase">Purchase</button>
+                </div>
+                <div id="info-panel">
+                    <p class="text-light">Description</p>
+                    <span class="text-secondary">{{ asset.asset_description }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let id = "{{ asset.asset_id }}"
+    document.getElementById('purchase').addEventListener('click', () => {
+        window.location.replace(`/purchase?asset_id=${id}`);
+    })
+
+    let price = parseInt("{{ asset.price }}")
+    document.getElementById('price').innerText = price.toLocaleString('de-DE') + "đ";
+</script>
+{% endblock %}

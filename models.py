@@ -20,8 +20,9 @@ class Assets(db.Model):
     asset_hash = db.Column(db.String(), unique=True, nullable=False)
     asset_route = db.Column(db.String(), unique=True, nullable=False)
     asset_description = db.Column(db.String(), unique=False, nullable=False)
-    price = db.Column(db.Integer(), unique=True, nullable=False)
+    price = db.Column(db.Integer(), unique=False, nullable=False)
     owner = db.Column(db.String(), unique=False, nullable=False)
+    creation_date = db.Column(db.DateTime())
 
 class Wallet(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

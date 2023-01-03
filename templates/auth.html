@@ -13,7 +13,7 @@
                 {% if messages %}
                     {% for category, message in messages %}
                         {% if category == 'message' %}
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position: fixed; z-index: 9999;">
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
                         {% else %}
                             <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
                         {% endif %}
