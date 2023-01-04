@@ -193,22 +193,26 @@ def dashboard():
 def view_product(asset_id: str):
     product = Assets.query.filter_by(asset_id=asset_id).first()
     author = User.query.filter_by(user_id=product.owner).first()
-    return render_template('asset.html', asset=product, author=author, datetime=datetime.now(), current_user=current_user)
+    orders = Orders.query.filter_by(asset_id=asset_id).order_by(Orders.amount.desc()).first()
+    return render_template('asset.html', asset=product, author=author, datetime=datetime.now(), current_user=current_user, orders=orders)
 
 @indexbp.route('/purchase', methods=['GET', 'POST'])
 @login_required
 def buy():
-    price = request.args.get('price')
+    price = request.args.get('amount')
     asset_id = request.args.get('asset_id')
     asset = Assets.query.filter_by(asset_id=asset_id).first()
     asset_owner = asset.owner
+    if asset_owner == current_user.user_id:
+        flash("You can't buy your own product!", 'warning')
+        return redirect('/dashboard')
     if request.method == "GET" and request.args.get('purchase') == "1":
         try:
             uuid = str(uuid1())
             order = Orders()
             order.order_id = uuid
             order.asset_id = asset_id
-            order.amount = str(price)
+            order.amount = int(price)
             order.buyer = current_user.user_id
             order.seller = asset_owner
             db.session.add(order)
@@ -225,3 +229,7 @@ def success():
     order_id = request.args.get('order_id')
     order = Orders.query.filter_by(order_id=order_id).first()
     return render_template('success.html', order=order)
+
+@indexbp.route('/support', methods=['GET'])
+def support():
+    return render_template('support.html')
