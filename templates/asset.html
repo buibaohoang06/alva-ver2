@@ -46,7 +46,11 @@
                     <p class="text-light">Currently buying as - {{ current_user.username }}</p>
                     <p class="text-body">Current Price</p>
                     <h1 class="text-light" id="price">đ</h1>
-                    <button type="button" class="btn btn-primary" id="purchase">Purchase</button>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="priceInput" required>
+                        <label for="priceInput">Your Price</label>
+                    </div>                    
+                    <button type="button" class="btn btn-primary" id="purchase">Purchase</button>      
                 </div>
                 <div id="info-panel">
                     <p class="text-light">Description</p>
@@ -57,12 +61,13 @@
     </div>
 </div>
 <script>
-    let id = "{{ asset.asset_id }}"
-    document.getElementById('purchase').addEventListener('click', () => {
-        window.location.replace(`/purchase?asset_id=${id}`);
-    })
-
     let price = parseInt("{{ asset.price }}")
     document.getElementById('price').innerText = price.toLocaleString('de-DE') + "đ";
+
+    let priceInput = document.getElementById('priceInput');
+    let id = "{{ asset.asset_id }}"
+    document.getElementById('purchase').addEventListener('click', () => {
+        window.location.replace(`/purchase?asset_id=${id}&price=${priceInput.value}`);
+    })
 </script>
 {% endblock %}

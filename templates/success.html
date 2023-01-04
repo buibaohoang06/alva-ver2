@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="/static/success.css">
+{% endblock %}
+{% block body %}
+<div id="success" class="bg-body-tertiary container-fluid animate__animated animate__fadeInUp">
+    <div id="status-block">
+        <h1 class="text-success text-center"><i class="bi bi-check-circle-fill"></i></h1>
+        <h4 class="text-light text-center">Your bid has been placed!</h4>
+        <p class="text-secondary-emphasis text-center">Order ID: {{ order.order_id }}</p>
+        <p class="text-light">An email will be sent to you if you have won the bid.</p>
+        <a href="/marketplace">Back to main page.</a>
+    </div>
+</div>
+{% endblock %}

@@ -43,36 +43,6 @@ def check_exist(asset_id: str):
     except AttributeError:
         return False
 
-def create_order(asset_id: str, amount: int, buyer: str, seller: str):
-    message = ""
-    status = ""
-    bill_id = ""        
-    try:
-        #Subtract Balance
-        wallet = Wallet.query.filter_by(owner=buyer).first()
-        if wallet.balance >= amount:
-            wallet.balance = int(wallet.balance) - int(amount)
-            order = Orders()
-            order.order_id, bill_id = str(uuid1)
-            order.asset_id = asset_id
-            order.amount = amount
-            order.buyer = buyer
-            order.seller = seller
-            db.session.add(order)
-            db.session.commit()
-            status = "success"
-        else:
-            status = "danger"
-            message = "insufficient funds"
-    except Exception as e:
-        status = "danger"
-        message = str(e)
-    return {
-        "status": status,
-        "message": message,
-        "bill_id": bill_id
-    }
-
 #Login Manager
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -101,7 +71,7 @@ class CreatePost(FlaskForm):
     image_description = TextAreaField(validators=[InputRequired()], render_kw={"placeholder": "Description"})
     price = IntegerField(validators=[InputRequired()])
     submit = SubmitField()
-    
+
 #Routes
 @indexbp.route('/', methods=['GET', 'POST'])
 def indexpage():
@@ -155,13 +125,7 @@ def register():
             user.phone_number = form.phonenumber.data
             user.user_id = hash_md5(form.username.data)
             user.created_at = datetime.now()
-            #Create wallet
-            wallet = Wallet()
-            wallet.wallet_id = str(uuid1())
-            wallet.wallet_owner = hash_md5(form.username.data)
-            wallet.balance = 0
             db.session.add(user)
-            db.session.add(wallet)
             db.session.commit()
             flash('Successfully registered user. Please login again!', 'success')
             return redirect('/login')
@@ -234,23 +198,19 @@ def view_product(asset_id: str):
 @indexbp.route('/purchase', methods=['GET', 'POST'])
 @login_required
 def buy():
-    asset = None
+    price = request.args.get('price')
     asset_id = request.args.get('asset_id')
     asset = Assets.query.filter_by(asset_id=asset_id).first()
-    wallet = Wallet.query.filter_by(wallet_owner=current_user.user_id).first()
-    affordable = False
-    if int(asset.price) <= int(wallet.balance):
-        affordable = True
+    asset_owner = asset.owner
     if request.method == "GET" and request.args.get('purchase') == "1":
         try:
             uuid = str(uuid1())
-            wallet.balance = int(wallet.balance) - int(asset.price)
             order = Orders()
             order.order_id = uuid
             order.asset_id = asset_id
-            order.amount = asset.price
+            order.amount = str(price)
             order.buyer = current_user.user_id
-            order.seller = asset.owner
+            order.seller = asset_owner
             db.session.add(order)
             db.session.commit()
             flash("Success!", 'success')
@@ -258,5 +218,10 @@ def buy():
         except Exception as e:
             print(str(e))
             return redirect(f"/marketplace") 
-    return render_template('purchase.html', asset=asset, wallet=wallet, affordable=affordable)
+    return render_template('purchase.html', asset=asset, price=price)
     
+@indexbp.route('/status', methods=['GET', 'POST'])
+def success():
+    order_id = request.args.get('order_id')
+    order = Orders.query.filter_by(order_id=order_id).first()
+    return render_template('success.html', order=order)

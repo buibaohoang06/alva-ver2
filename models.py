@@ -24,12 +24,6 @@ class Assets(db.Model):
     owner = db.Column(db.String(), unique=False, nullable=False)
     creation_date = db.Column(db.DateTime())
 
-class Wallet(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    wallet_id = db.Column(db.String(), unique=True, nullable=False)
-    balance = db.Column(db.String(), unique=False, nullable=False, default=0)
-    wallet_owner = db.Column(db.String(), unique=True, nullable=False)
-
 class Transactions(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     transaction_id = db.Column(db.String(), unique=True, nullable=False)
