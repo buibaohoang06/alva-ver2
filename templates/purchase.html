@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="/static/purchase.css">
+{% endblock %}
+{% block body %}
+<div id="purchase" class="container-fluid">
+    <div id="title" class="container" style="margin: auto; width: fit-content; height: fit-content; margin-top: 50px; text-align: center">
+        <h3>Checkout</h3>
+        <p>Item ID: #{{ asset.asset_id }}</p>
+    </div>
+    <div id="checkout-details" class="bg-secondary-subtle container">
+        <p class="text-center">An ID will be generated for your bill after purchasing</p>
+        <p class="text-secondary text-center">You are purchasing:</p>
+        <div id="item-preview" class="text-center">
+            <h3 class="text-light text-center">{{ asset.asset_name }}</h3>
+            <p class="text-warning text-center" style="width: 100%;">{{ asset.asset_hash }}</p>
+            <img src="/{{ asset.asset_route }}" id="item">
+            <p class="text-center" style="margin-top: 20px;">Subtotal</p>
+            <h4 id="price" class="text-success text-center"></h4>
+            <p class="text-center" style="margin-top: 20px;">Your balance</p>
+            <h4 id="balance"></h4>
+            <p class="text-primary-emphasis">By clicking purchase you agree with our Terms of Service and Refund Policy</p>
+        </div>
+        <div id="purchase-button">
+            {% if affordable == True %}
+            <button type="button" class="btn btn-primary" id="purchase-button">Purchase</button>
+            {% else %}
+            <button type="button" class="btn btn-secondary" disabled>Insufficient Funds</button>
+            {% endif %}
+            <button type="button" class="btn btn-danger" id="cancel">Cancel</button>
+        </div>
+    </div>
+    
+</div>
+<script>
+    let price = parseInt("{{ asset.price }}")
+    let balance = parseInt("{{ wallet.balance }}")
+    document.getElementById('price').innerText = price.toLocaleString('de-DE') + "đ";
+    document.getElementById('balance').innerText = balance.toLocaleString('de-DE') + "đ";
+
+    let purchaseButton = document.getElementById('purchase-button')
+    purchaseButton.addEventListener('click', () => {
+        window.location.replace('/purchase?asset_id={{ asset.asset_id }}&purchase=1')
+    })
+    let cancelButton = document.getElementById('cancel');
+    cancelButton.addEventListener('click', () => {
+        window.location.replace('/marketplace')
+    })
+</script>
+{% endblock %}

@@ -46,33 +46,27 @@ def check_exist(asset_id: str):
 def create_order(asset_id: str, amount: int, buyer: str, seller: str):
     message = ""
     status = ""
-    bill_id = ""
-    while True:
-        try:
-            #Subtract Balance
-            wallet = Wallet.query.filter_by(owner=buyer).first()
-            if wallet.balance >= amount:
-                wallet.balance = wallet.balance - amount
-                order = Orders()
-                order.order_id, bill_id = str(uuid1)
-                order.asset_id = asset_id
-                order.amount = amount
-                order.buyer = buyer
-                order.seller = seller
-                db.session.add(order)
-                db.session.commit()
-                status = "success"
-                break
-            else:
-                status = "danger"
-                message = "insufficient funds"
-                break
-        except IntegrityError:
-            continue
-        except Exception as e:
+    bill_id = ""        
+    try:
+        #Subtract Balance
+        wallet = Wallet.query.filter_by(owner=buyer).first()
+        if wallet.balance >= amount:
+            wallet.balance = int(wallet.balance) - int(amount)
+            order = Orders()
+            order.order_id, bill_id = str(uuid1)
+            order.asset_id = asset_id
+            order.amount = amount
+            order.buyer = buyer
+            order.seller = seller
+            db.session.add(order)
+            db.session.commit()
+            status = "success"
+        else:
             status = "danger"
-            message = str(e)
-            break
+            message = "insufficient funds"
+    except Exception as e:
+        status = "danger"
+        message = str(e)
     return {
         "status": status,
         "message": message,
@@ -161,7 +155,13 @@ def register():
             user.phone_number = form.phonenumber.data
             user.user_id = hash_md5(form.username.data)
             user.created_at = datetime.now()
+            #Create wallet
+            wallet = Wallet()
+            wallet.wallet_id = str(uuid1())
+            wallet.wallet_owner = hash_md5(form.username.data)
+            wallet.balance = 0
             db.session.add(user)
+            db.session.add(wallet)
             db.session.commit()
             flash('Successfully registered user. Please login again!', 'success')
             return redirect('/login')
@@ -234,17 +234,29 @@ def view_product(asset_id: str):
 @indexbp.route('/purchase', methods=['GET', 'POST'])
 @login_required
 def buy():
+    asset = None
     asset_id = request.args.get('asset_id')
-    if check_exist(asset_id=asset_id):
-        asset = Assets.query.filter_by(asset_id=asset_id).first()
-        if request.method == "POST" and request.args.get('purchase') == 1:
-            order = create_order(
-                asset_id = asset_id,
-                buyer=current_user.user_id,
-                seller=asset.owner,
-                amount = asset.price
-            )
-            flash(order['message'], order['message'])
-            return redirect('/purchase')
-        return render_template('buy.html', asset=asset)
-    return abort(404)
+    asset = Assets.query.filter_by(asset_id=asset_id).first()
+    wallet = Wallet.query.filter_by(wallet_owner=current_user.user_id).first()
+    affordable = False
+    if int(asset.price) <= int(wallet.balance):
+        affordable = True
+    if request.method == "GET" and request.args.get('purchase') == "1":
+        try:
+            uuid = str(uuid1())
+            wallet.balance = int(wallet.balance) - int(asset.price)
+            order = Orders()
+            order.order_id = uuid
+            order.asset_id = asset_id
+            order.amount = asset.price
+            order.buyer = current_user.user_id
+            order.seller = asset.owner
+            db.session.add(order)
+            db.session.commit()
+            flash("Success!", 'success')
+            return redirect(f"/status?order_id={uuid}")
+        except Exception as e:
+            print(str(e))
+            return redirect(f"/marketplace") 
+    return render_template('purchase.html', asset=asset, wallet=wallet, affordable=affordable)
+    
