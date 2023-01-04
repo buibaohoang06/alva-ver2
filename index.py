@@ -215,6 +215,7 @@ def buy():
             order.amount = int(price)
             order.buyer = current_user.user_id
             order.seller = asset_owner
+            order.created_at = datetime.utcnow()
             db.session.add(order)
             db.session.commit()
             flash("Success!", 'success')
