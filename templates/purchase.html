@@ -35,7 +35,7 @@
 
     let purchaseButton = document.getElementById('purchase-button')
     purchaseButton.addEventListener('click', () => {
-        window.location.replace('/purchase?asset_id={{ asset.asset_id }}&purchase=1')
+        window.location.replace('/purchase?asset_id={{ asset.asset_id }}&amount={{ price }}&purchase=1')
     })
     let cancelButton = document.getElementById('cancel');
     cancelButton.addEventListener('click', () => {
@@ -43,6 +43,10 @@
     })
     
     let bidPrice = parseInt("{{ price }}")
-    document.getElementById('bid').innerText = bidPrice.toLocaleString('de-DE') + "đ";
+    if (bidPrice === undefined){
+        document.getElementById('bid').innerText = "No bids."
+    } else{
+        document.getElementById('bid').innerText = bidPrice.toLocaleString('de-DE') + "đ";
+    }
 </script>
 {% endblock %}

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 {% block link %}
 <link rel="stylesheet" href="/static/marketplace.css">
@@ -211,3 +212,70 @@
 
     </script>
     {% endblock %}
+=======
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="/static/marketplace.css">
+{% endblock %}
+{% block body %}
+<div id="marketplace" class="bg-body-tertiary animate__animated animate__fadeIn">
+    <div id="navbar">
+        <div id="logo">
+            <h4><i class="bi bi-flower3"></i>Veart.</h4>
+        </div>
+        <div id="nav" class="navbar navbar-expand-lg mx-auto">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="/marketplace" class="nav-link">Marketplace</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/support" class="nav-link">Support</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/wallet" class="nav-link">Wallet</a>
+                </li>
+            </ul>
+        </div>
+        <div id="actions">
+            <h4><a href="/dashboard" class="text-light"><i class="bi bi-person-circle"></i></a></h4>
+        </div>
+    </div>
+    <div id="content" class="container">
+        <div id="beta" class="alert alert-info w-100">
+            Veart is still in beta stages, please report any bugs or errors to admin@veart.co
+        </div>
+        <div id="mantra">
+            <h1 class="text-center" id="mantra-content"></h1>
+            <p class="text-primary text-center" id="mantra-author"></p>
+        </div>
+        <div id="highlights-wrapper" class="container-fluid">
+            <div id="highlights">
+                {% for asset in assets.items %}
+                    <img src="{{ asset.asset_route }}" id="highlights-img">
+                {% endfor %}
+            </div>
+            <p class="text-secondary-emphasis text-center" style="margin-top: 10px;">Click on one of the images to get more info!</p>
+        </div>
+    </div>
+</div>
+<script>
+    function loadMantra(){
+        fetch('https://api.quotable.io/random?tags=inspirational&maxLength=40')
+        .then((res) => res.json())
+        .then((data) => {
+            document.getElementById('mantra-content').innerText = `"${data.content}"`
+            document.getElementById('mantra-author').innerText = `_${data.author}`
+        })
+    }
+
+    if (window.addEventListener){
+        window.addEventListener('load', loadMantra(), false);
+    } else{
+        window.addEventListener('onload', loadMantra());
+    }
+</script>
+{% endblock %}
+>>>>>>> d2e877d417e99c90ac91ea6216310fa9bd5072bb

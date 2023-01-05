@@ -1,8 +1,10 @@
 from app import app
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import UserMixin
+from flask_migrate import Migrate
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer(), primary_key=True)
@@ -25,20 +27,14 @@ class Assets(db.Model):
     owner = db.Column(db.String(), unique=False, nullable=False)
     creation_date = db.Column(db.DateTime())
 
-class Transactions(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    transaction_id = db.Column(db.String(), unique=True, nullable=False)
-    transaction_type = db.Column(db.String(), unique=False, nullable=False)
-    amount = db.Column(db.Integer(), unique=False, nullable=False)
-    owner = db.Column(db.String(), unique=True, nullable=False)
-
 class Orders(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     order_id = db.Column(db.String(), unique=True, nullable=False)
-    asset_id = db.Column(db.String(), unique=True, nullable=False)
+    asset_id = db.Column(db.String(), unique=False, nullable=False)
     seller = db.Column(db.String(), unique=False, nullable=False)
     buyer = db.Column(db.String(), unique=False, nullable=False)
     amount = db.Column(db.Integer(), unique=False, nullable=False)
+    created_at = db.Column(db.DateTime())
 
 class Verify(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

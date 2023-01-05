@@ -217,19 +217,23 @@ def view_product(asset_id: str):
 @indexbp.route('/purchase', methods=['GET', 'POST'])
 @login_required
 def buy():
-    price = request.args.get('price')
+    price = request.args.get('amount')
     asset_id = request.args.get('asset_id')
     asset = Assets.query.filter_by(asset_id=asset_id).first()
     asset_owner = asset.owner
+    if asset_owner == current_user.user_id:
+        flash("You can't buy your own product!", 'warning')
+        return redirect('/dashboard')
     if request.method == "GET" and request.args.get('purchase') == "1":
         try:
             uuid = str(uuid1())
             order = Orders()
             order.order_id = uuid
             order.asset_id = asset_id
-            order.amount = str(price)
+            order.amount = int(price)
             order.buyer = current_user.user_id
             order.seller = asset_owner
+            order.created_at = datetime.utcnow()
             db.session.add(order)
             db.session.commit()
             flash("Success!", 'success')
@@ -244,3 +248,10 @@ def success():
     order_id = request.args.get('order_id')
     order = Orders.query.filter_by(order_id=order_id).first()
     return render_template('success.html', order=order)
+<<<<<<< HEAD
+=======
+
+@indexbp.route('/support', methods=['GET'])
+def support():
+    return render_template('support.html')
+>>>>>>> d2e877d417e99c90ac91ea6216310fa9bd5072bb

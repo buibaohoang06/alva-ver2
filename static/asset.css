@@ -74,9 +74,13 @@
     padding: 0;
 }
 #asset-content{
-    padding: 50px;
+    width: 100%;
+    height: 100%;
+    margin: 50px auto;
+    padding: 20px;
 }
 #asset-details{
+    margin: auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 20px;
@@ -140,6 +144,7 @@
     background-color:#36454F;
     color: white;
     border-radius: 10px 10px 10px 10px;
+    text-align: left;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
 }
 #info-panel p{
