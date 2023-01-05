@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> d2e877d417e99c90ac91ea6216310fa9bd5072bb
 from flask import Blueprint, request, jsonify
 from models import Orders, User
 from sqlalchemy import desc

@@ -233,7 +233,7 @@ def buy():
             order.amount = int(price)
             order.buyer = current_user.user_id
             order.seller = asset_owner
-            order.created_at = datetime.utcnow()
+            #order.created_at = datetime.utcnow()
             db.session.add(order)
             db.session.commit()
             flash("Success!", 'success')
@@ -248,10 +248,7 @@ def success():
     order_id = request.args.get('order_id')
     order = Orders.query.filter_by(order_id=order_id).first()
     return render_template('success.html', order=order)
-<<<<<<< HEAD
-=======
 
 @indexbp.route('/support', methods=['GET'])
 def support():
     return render_template('support.html')
->>>>>>> d2e877d417e99c90ac91ea6216310fa9bd5072bb
