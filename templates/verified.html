@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="/static/success.css">
+{% endblock %}
+{% block body %}
+<div id="success" class="bg-body-tertiary container-fluid animate__animated animate__fadeInUp">
+    <div id="status-block">
+        <h1 class="text-success text-center"><i class="bi bi-check-circle-fill"></i></h1>
+        <h4 class="text-light text-center">Your email has been confirmed!</h4>
+        <p class="text-light">Click the link below to login.</p>
+        <a href="/login">Login</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="/static/success.css">
+{% endblock %}
+{% block body %}
+<div id="success" class="bg-body-tertiary container-fluid animate__animated animate__fadeInUp">
+    <div id="status-block">
+        <h1 class="text-danger text-center"><i class="bi bi-x-circle-fill"></i></h1>
+        <h2 class="text-center">404</h2>
+        <h4 class="text-light text-center">Oops, what are you doing here traveler?</h4>
+        <p class="text-light">Click the link below to go back to where you are supposed to be.</p>
+        <a href="/marketplace">Back to main page.</a>
+    </div>
+</div>
+{% endblock %}

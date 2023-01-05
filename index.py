@@ -12,7 +12,10 @@ from wtforms import StringField, PasswordField, IntegerField, EmailField, FileFi
 from wtforms.validators import InputRequired
 from datetime import datetime
 import os
-import locale
+import random
+import string
+from email_send import sendEmail
+
 #Initialize Blueprint
 indexbp = Blueprint("index", __name__, url_prefix="/", template_folder="templates", static_folder="static")
 
@@ -82,9 +85,10 @@ def marketplace():
     page = request.args.get('p', 1)
     try:
         assets = Assets.query.order_by(desc(Assets.id)).paginate(page=page, per_page=12)
-    except OperationalError:
+    except Exception as e:
+        print(str(e))
         assets = None
-    return render_template('marketplace.html', assets=assets)
+    return render_template('marketplace.html', assets=assets, page=page)
 
 @indexbp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -93,7 +97,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         try:
-            if check_hash_sha256(data=form.password.data, data_compare=User.query.filter_by(email=form.email.data).first().hashed_password):
+            if check_hash_sha256(data=form.password.data, data_compare=User.query.filter_by(email=form.email.data).first().hashed_password) and User.query.filter_by(email=form.email.data).first().verified:
                 login_user(User.query.filter_by(email=form.email.data).first())
                 flash('Logged in!', 'success')
                 return redirect('/')
@@ -119,15 +123,22 @@ def register():
     if form.validate_on_submit():
         try:
             user = User()
+            verify = Verify()
             user.username = form.username.data
             user.hashed_password = hash_sha256(data=form.password.data)
             user.email = form.email.data
             user.phone_number = form.phonenumber.data
             user.user_id = hash_md5(form.username.data)
             user.created_at = datetime.now()
+            user.verified = False
+            verify_key = ''.join((random.choice(string.ascii_lowercase) for x in range(128)))
+            verify.verify_key = verify_key
+            verify.email = form.email.data
             db.session.add(user)
+            db.session.add(verify)
             db.session.commit()
-            flash('Successfully registered user. Please login again!', 'success')
+            sendEmail(receiver=form.email.data, link=verify_key)
+            flash('Registered! Please check your email for a verification link.', 'success')
             return redirect('/login')
         except Exception as e:
             print(str(e))
@@ -142,13 +153,20 @@ def logout():
     flash('Logged out!')
     return redirect('/login')
 
-@indexbp.route('/user/<username>', methods=['GET', 'POST'])
-def user(username: str):
-    page = request.args.get('page', 1)
-    user_lookup = User.query.filter_by(username=username).first()
-    assets = Assets.query.filter_by(owner=user_lookup.user_id).order_by(desc(Assets.id)).paginate(page=page, per_page=9)
-    return render_template('user.html', user=user_lookup, assets=assets)
-
+@indexbp.route('/verifyEmail', methods=['GET', 'POST'])
+def verifyEmailWithLink():
+    string = request.args.get('string')
+    try:
+        verify = Verify.query.filter_by(verify_key=string).first()
+        user = User.query.filter_by(email=verify.email).first()
+        user.verified = True
+        db.session.delete(verify)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(str(e))
+        abort(404)
+    return render_template("verified.html")
 @indexbp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
@@ -193,7 +211,8 @@ def dashboard():
 def view_product(asset_id: str):
     product = Assets.query.filter_by(asset_id=asset_id).first()
     author = User.query.filter_by(user_id=product.owner).first()
-    return render_template('asset.html', asset=product, author=author, datetime=datetime.now(), current_user=current_user)
+    orders = Orders.query.filter_by(asset_id=asset_id).order_by(Orders.amount.desc()).first()
+    return render_template('asset.html', asset=product, author=author, datetime=datetime.now(), current_user=current_user, orders=orders)
 
 @indexbp.route('/purchase', methods=['GET', 'POST'])
 @login_required

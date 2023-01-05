@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(), unique=True, nullable=False)
     created_at = db.Column(db.DateTime())
     phone_number = db.Column(db.String(), unique=True, nullable=False)
+    verified = db.Column(db.Boolean(), default=False)
 
 class Assets(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -39,3 +40,7 @@ class Orders(db.Model):
     buyer = db.Column(db.String(), unique=False, nullable=False)
     amount = db.Column(db.Integer(), unique=False, nullable=False)
 
+class Verify(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    email = db.Column(db.String(), unique=True, nullable=False)
+    verify_key = db.Column(db.String(), unique=True, nullable=False)
